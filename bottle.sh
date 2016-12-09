@@ -19,6 +19,7 @@ rm -rf /usr/local/opt/libsodium/lib/libsodium*.dylib
 brew uninstall kr
 brew untap kryptco/tap
 rm -rf /usr/local/Homebrew/Library/Taps/kcking
+rm -rf ~/Library/Caches/Homebrew/kr--git
 brew install kcking/tap/kr --devel --build-bottle
 brew bottle kcking/tap/kr --devel
 mv kr-* kr-$version.$osx_name.bottle.tar.gz
