@@ -21,7 +21,8 @@ brew uninstall kr || true
 brew untap kryptco/tap || true
 rm -rf /usr/local/Homebrew/Library/Taps/kcking
 rm -rf ~/Library/Caches/Homebrew/kr--git
-brew install kcking/tap/kr --devel --build-bottle
+brew tap kcking/tap
+brew install --devel --build-bottle kcking/tap/kr || true
 
 codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/kr
 codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/krd
@@ -35,7 +36,10 @@ fi
 brew bottle kcking/tap/kr --devel
 mv kr-* kr-$version.$osx_name.bottle.tar.gz
 tar xvf kr-$version.$osx_name.bottle.tar.gz
-mv kr/* kr/$version
-rm kr-$version.$osx_name.bottle.tar.gz
+rm -f kr-$version.$osx_name.bottle.tar.gz
 tar cvf kr-$version.$osx_name.bottle.tar.gz kr
-openssl dgst -sha256 kr-$version.$osx_name.bottle.tar.gz 
+mv kr-$version.$osx_name.bottle.tar.gz ..
+openssl dgst -sha256 ../kr-$version.$osx_name.bottle.tar.gz 
+cd ..
+git add kr-$version.$osx_name.bottle.tar.gz
+git commit -m "$osx_name $version"
