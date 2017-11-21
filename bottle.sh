@@ -1,4 +1,5 @@
 #!/bin/bash
+set -e
 version=$1
 osx_name=$2
 usage="usage: bottle.sh <VERSION> <OS NAME>"
@@ -26,6 +27,9 @@ codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /u
 codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/krd
 codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/krssh
 codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/krgpg
+if [ -f /usr/local/Cellar/kr/$version/Frameworks/krbtle.framework ]; then
+	codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/Frameworks/krbtle.framework
+fi
 
 
 brew bottle kcking/tap/kr --devel
