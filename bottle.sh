@@ -11,14 +11,14 @@ if [[ -z $osx_name ]]; then
 	echo $usage 
 	exit 1
 fi
-rm -rf tmp
+rm -rf tmp || true
 mkdir tmp 
 cd tmp
 brew install libsodium
 rm -rf /usr/local/lib/libsodium*.dylib
 rm -rf /usr/local/opt/libsodium/lib/libsodium*.dylib
-brew uninstall kr
-brew untap kryptco/tap
+brew uninstall kr || true
+brew untap kryptco/tap || true
 rm -rf /usr/local/Homebrew/Library/Taps/kcking
 rm -rf ~/Library/Caches/Homebrew/kr--git
 brew install kcking/tap/kr --devel --build-bottle
