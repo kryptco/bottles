@@ -2,6 +2,12 @@
 set -e
 version=$1
 osx_name=$2
+
+rebuild=$3
+if [[ ! -z "$rebuild" ]]; then
+	rebuild="${rebuild}."
+fi
+
 usage="usage: bottle.sh <VERSION> <OS NAME>"
 if [[ -z $version ]]; then
 	echo $usage 
@@ -22,24 +28,26 @@ brew untap kryptco/tap || true
 rm -rf /usr/local/Homebrew/Library/Taps/kcking
 rm -rf ~/Library/Caches/Homebrew/kr--git
 brew tap kcking/tap
-brew install --devel --build-bottle kcking/tap/kr || true
+brew install --verbose --HEAD --build-bottle kcking/tap/kr || true
 
-codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/kr
-codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/krd
-codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/krssh
-codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/bin/krgpg
-if [ -f /usr/local/Cellar/kr/$version/Frameworks/krbtle.framework ]; then
-	codesign -s "3rd Party Mac Developer Application: KryptCo, Inc. (W7AMYM5LPN)" /usr/local/Cellar/kr/$version/Frameworks/krbtle.framework
-fi
+bottle_name=kr-$version.$osx_name.bottle.${rebuild}tar.gz
+brew bottle kcking/tap/kr --HEAD
+mv kr-* $bottle_name
+tar xvf $bottle_name
+rm -f $bottle_name
 
+cd kr
+mv `ls` $version
+cd `ls`;
+for binary in `find bin -d 1 2>/dev/null || true`; do
+	echo signing $binary...;
+	codesign --force --sign BA1AEE36032DAA5F5D57C2E7E1A9856ADAB4F119 --timestamp=none $binary
+done
+cd ../..
 
-brew bottle kcking/tap/kr --devel
-mv kr-* kr-$version.$osx_name.bottle.tar.gz
-tar xvf kr-$version.$osx_name.bottle.tar.gz
-rm -f kr-$version.$osx_name.bottle.tar.gz
-tar cvf kr-$version.$osx_name.bottle.tar.gz kr
-mv kr-$version.$osx_name.bottle.tar.gz ..
-openssl dgst -sha256 ../kr-$version.$osx_name.bottle.tar.gz 
+tar cvf $bottle_name kr
+mv $bottle_name ..
+openssl dgst -sha256 ../$bottle_name 
 cd ..
-git add kr-$version.$osx_name.bottle.tar.gz
-git commit -m "$osx_name $version"
+git add $bottle_name
+git commit -m "$osx_name $version.$rebuild"
