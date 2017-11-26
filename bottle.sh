@@ -39,7 +39,7 @@ rm -f $bottle_name
 cd kr
 mv `ls` $version
 cd `ls`;
-for binary in `find bin -d 1 2>/dev/null || true`; do
+for binary in `find bin Frameworks -d 1 2>/dev/null || true`; do
 	echo signing $binary...;
 	codesign --force --sign BA1AEE36032DAA5F5D57C2E7E1A9856ADAB4F119 --timestamp=none $binary
 done
