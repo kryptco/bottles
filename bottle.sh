@@ -25,6 +25,8 @@ rm -rf ~/Library/Caches/Homebrew/kr--git
 brew tap kryptco/tap
 brew install --verbose --build-bottle kryptco/tap/kr || true
 
+cd /usr/local/Homebrew/Library/Taps/kryptco/homebrew-tap && git fetch && git checkout devel && git reset --hard origin/devel && cd -
+
 bottle_name=kr-$version.$osx_name.bottle.${rebuild}tar.gz
 brew bottle kryptco/tap/kr
 mv kr-* $bottle_name
