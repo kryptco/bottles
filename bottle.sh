@@ -20,24 +20,18 @@ fi
 rm -rf tmp || true
 mkdir tmp 
 cd tmp
-brew install libsodium
-rm -rf /usr/local/lib/libsodium*.dylib
-rm -rf /usr/local/opt/libsodium/lib/libsodium*.dylib
 brew uninstall kr || true
-brew untap kryptco/tap || true
-rm -rf /usr/local/Homebrew/Library/Taps/kcking
 rm -rf ~/Library/Caches/Homebrew/kr--git
-brew tap kcking/tap
-brew install --verbose --HEAD --build-bottle kcking/tap/kr || true
+brew tap kryptco/tap
+brew install --verbose --build-bottle kryptco/tap/kr || true
 
 bottle_name=kr-$version.$osx_name.bottle.${rebuild}tar.gz
-brew bottle kcking/tap/kr --HEAD
+brew bottle kryptco/tap/kr
 mv kr-* $bottle_name
 tar xvf $bottle_name
 rm -f $bottle_name
 
 cd kr
-mv `ls` $version
 cd `ls`;
 for binary in `find bin Frameworks -d 1 2>/dev/null || true`; do
 	echo signing $binary...;
