@@ -43,7 +43,8 @@ cd ../..
 
 tar cvf $bottle_name kr
 mv $bottle_name ..
-openssl dgst -sha256 ../$bottle_name 
+hash=`openssl dgst -sha256 ../$bottle_name | awk '{print $2}'`
+echo $hash
 cd ..
 git add $bottle_name
-git commit -m "$osx_name $version.$rebuild"
+git commit -m "$osx_name $version.$rebuild SHA256: $hash"
