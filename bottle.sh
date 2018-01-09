@@ -5,14 +5,14 @@ rm -rf tmp || true
 mkdir tmp 
 cd tmp
 
-cd /usr/local/Homebrew/Library/Taps/kryptco/homebrew-tap && git fetch origin devel && git checkout FETCH_HEAD && git checkout -B devel && cd -
+cd /usr/local/Homebrew/Library/Taps/kryptco/homebrew-tap && git fetch origin master && git checkout FETCH_HEAD && git checkout -B master && cd -
 
 brew uninstall kr || true
 rm -rf ~/Library/Caches/Homebrew/kr--git
 brew tap kryptco/tap
 brew install --verbose --build-bottle kryptco/tap/kr || true
 
-brew bottle kryptco/tap/kr
+brew bottle --root-url="https://github.com/kryptco/bottles/raw/master" --keep-old --skip-relocation kryptco/tap/kr
 bottle_name=`ls`
 tar xvf $bottle_name
 rm -f $bottle_name
